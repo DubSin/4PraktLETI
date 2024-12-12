@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <conio.h>
+#include <cstring>
 using namespace std;
 
 unsigned string_length(char *S)
@@ -12,7 +13,7 @@ unsigned string_length(char *S)
 
 }
 void vertical_output(char *str, int cur_size){
-    for(int i=0; i<cur_size; i++){
+    for(int i=0; i<=cur_size; i++){
         if (str[i] == ' '){
             cout << '\n';
         }
@@ -151,7 +152,41 @@ int kmp(char* text, char* pattern) {
 
     return count;
 }
+void clear_string(char* str, int length){
+    char cleaned_text[100]; 
+    int j = 0;
+    bool prev_space = false; 
+    bool prev_punct = false; 
+    for (int i = 0; i <= length; ++i) {
+        if (str[i] >= 'A' && str[i] <= 'Z') {
+           cleaned_text[j++] = str[i] + ('a' - 'A'); 
+        } else {
+            cleaned_text[j++] = str[i];
+        }
 
+        
+        if (cleaned_text[j - 1] == ' ') {
+            if ( prev_space) {
+                --j; 
+            }
+             prev_space = true;
+        } else {
+            prev_space = false; 
+        }
+
+        
+        if (strchr(".,;:!?", cleaned_text[j - 1])) { 
+            if (prev_punct) {
+                --j; 
+            }
+            prev_punct = true;
+        } else {
+            prev_punct = false; 
+        }
+    }
+
+    strcpy(str, cleaned_text);
+}
 int main() {
     char action = 's';
     int cur_str_size = 0;
@@ -201,7 +236,8 @@ int main() {
         }
         case '2':
         {
-            cout<< char_arr;
+            clear_string(char_arr, cur_str_size);
+            cout << char_arr;
             _getch();
             break;
         }
@@ -220,7 +256,7 @@ int main() {
             char algorithm_action;
             cout << "1)Linear algorithm \n2)KMP algorithm\n Choose your action: ";
             cin >> algorithm_action;
-            int ans;
+            int ans = 0;
             switch (algorithm_action)
             {
             case '1':
@@ -252,3 +288,4 @@ int main() {
     system("pause");
     return 0;
 }
+
