@@ -88,7 +88,7 @@ void ordered_output(char *str, int cur_size){
     }
 }
 
-int linear_search(char *str, char *substr, int str_legth, int sub_length) {\
+int linear_search(char *str, char *substr, int str_legth, int sub_length) {
     int sub_count = 0;
     for (int i = 0; i <= str_legth - sub_length; i++) {
         int j;
@@ -228,7 +228,6 @@ int main() {
                     cout << "Input your string: " << endl;
                     cin.sync();
                     cin.getline(char_arr, 100);
-                    cout << char_arr << endl;
                     cur_str_size = string_length(char_arr);
                     break;
             }
@@ -276,6 +275,7 @@ int main() {
                 cin.sync();
                 cin.getline(substring, 100);
                 ans = kmp(char_arr, substring);
+                break;
             }
             }
             cout << "Matches found: " << ans;
@@ -288,4 +288,5 @@ int main() {
     system("pause");
     return 0;
 }
+
 
