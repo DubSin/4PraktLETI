@@ -4,14 +4,7 @@
 #include <cstring>
 using namespace std;
 
-unsigned string_length(char *S)
-{
-     unsigned L = 0;
-     while (S[L]) 
-          ++L;
-     return L;
 
-}
 void vertical_output(char *str, int cur_size){
     for(int i=0; i<=cur_size; i++){
         if (str[i] == ' '){
@@ -49,6 +42,7 @@ void ordered_output(char *str, int cur_size){
         }
         }
     }
+    start_pos = 0;
     bool is_num = true;
     for (int i=0; i<=cur_size; i++){
         if (str[i] == ' ' or i == cur_size){
@@ -64,6 +58,7 @@ void ordered_output(char *str, int cur_size){
         }
         }
     }
+    start_pos = 0;
     bool is_all = true, char_init = false, int_init = false;
     for (int i=0; i<=cur_size; i++){
         if (str[i] == ' ' or i == cur_size){
@@ -104,12 +99,12 @@ int linear_search(char *str, char *substr, int str_legth, int sub_length) {
     return sub_count; 
 }
 
-void computeLps(char* pattern, int* &lps) {
-    int n = string_length(pattern);
-    int len = 0;
-    int i = 1;
+void computeLps(const char* pattern, int patternLength, int* lps) {
+    int len = 0; 
+    lps[0] = 0;  
 
-    while (i < n) {
+    int i = 1;
+    while (i < patternLength) {
         if (pattern[i] == pattern[len]) {
             len++;
             lps[i] = len;
@@ -124,24 +119,27 @@ void computeLps(char* pattern, int* &lps) {
         }
     }
 }
-int kmp(char* text, char* pattern) {
-    int count = 0;
-    int lps[100];
-    int n = string_length(text);
-    int m = string_length(pattern);
-    int i = 0;
-    int j = 0;
 
-    while (i < n) {
-        if (text[i] == pattern[j]) {
+int kmp(const char* text, const char* pattern) {
+    int textLength = strlen(text);
+    int patternLength = strlen(pattern);
+    int count = 0;
+
+    int* lps = new int[patternLength];
+    computeLps(pattern, patternLength, lps);
+
+    int i = 0; 
+    int j = 0; 
+    while (i < textLength) {
+        if (pattern[j] == text[i]) {
             i++;
             j++;
         }
 
-        if (j == m) {
+        if (j == patternLength) {
             count++;
             j = lps[j - 1];
-        } else if (i < n && text[i] != pattern[j]) {
+        } else if (i < textLength && pattern[j] != text[i]) {
             if (j != 0) {
                 j = lps[j - 1];
             } else {
@@ -150,8 +148,10 @@ int kmp(char* text, char* pattern) {
         }
     }
 
+    delete[] lps;
     return count;
 }
+
 void clear_string(char* str, int length){
     char cleaned_text[100]; 
     int j = 0;
@@ -190,7 +190,7 @@ void clear_string(char* str, int length){
 int main() {
     char action = 's';
     int cur_str_size = 0;
-    char char_arr[100];
+    char char_arr[100]{};
     while (action != 'e')
     {
         cout << "Menu" << endl;
@@ -221,14 +221,14 @@ int main() {
                         }
                     }
                     file.close();
-                    cur_str_size = string_length(char_arr);
+                    cur_str_size = strlen(char_arr);
                     break;
                 }
                 case 's':
                     cout << "Input your string: " << endl;
                     cin.sync();
                     cin.getline(char_arr, 100);
-                    cur_str_size = string_length(char_arr);
+                    cur_str_size = strlen(char_arr);
                     break;
             }
             break;
@@ -264,8 +264,8 @@ int main() {
                 cout << "Input your substring: " << endl;
                 cin.sync();
                 cin.getline(substring, 100);
-                int sub_ln = string_length(substring);
-                ans = linear_search(char_arr, substring, cur_str_size, string_length(substring));
+                int sub_ln = strlen(substring);
+                ans = linear_search(char_arr, substring, cur_str_size, strlen(substring));
                 break;
                 }
             case '2':
@@ -288,5 +288,4 @@ int main() {
     system("pause");
     return 0;
 }
-
 
